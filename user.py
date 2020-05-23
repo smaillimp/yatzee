@@ -3,7 +3,7 @@ def game_input(question, input_type=None):
     return input_type(value) if input_type is not None else value
 
 
-if __name__ == "__main__":
+def get_player_names():
     number_of_players = game_input(
         "How many players will play the game?", input_type=int
     )
@@ -13,3 +13,8 @@ if __name__ == "__main__":
         player_name = game_input("What is player {}'s name?".format(i + 1))
         players.append(player_name)
     print(players)
+    return players
+
+
+if __name__ == "__main__":
+    get_player_names()
