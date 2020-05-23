@@ -18,6 +18,7 @@ git push origin HEAD
 To get a version from git:
 
 `git fetch`
+
 `git pull`
 
 To check the current status, type
