@@ -12,8 +12,14 @@ To add a file to git, do the following:
 
 
 ```
+touch filename.py
 git add filename.py
-git commit -am "add filename.py"
+```
+
+Save a change in git and push it to the origin:
+
+```
+git commit -am "add functionality"
 git push origin HEAD
 ```
 
