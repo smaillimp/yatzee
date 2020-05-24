@@ -33,3 +33,12 @@ git pull
 To check the current status, type
 
 `git status`
+
+For testing, install the following modules:
+
+`pytest`, `mock`
+
+You might do so using pip:
+
+`pip install -U pytest mock`
+
