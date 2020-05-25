@@ -2,6 +2,9 @@ LIST_OF_INT = "list_of_int"
 
 
 def convert_to_list_of_int(value):
+    """
+    I don't know how to explain this function yet.
+    """
     return [int(v) for v in value.split()]
 
 
@@ -9,6 +12,10 @@ _SPECIAL_TYPES = {LIST_OF_INT: convert_to_list_of_int}
 
 
 def game_input(question, input_type=None):
+    """
+    I don't know how to explain this function yet.
+    """
+
     value = input("{} ".format(question))
     if input_type is None:
         return_value = value
