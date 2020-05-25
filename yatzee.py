@@ -3,6 +3,13 @@ import user
 import helpers
 
 
+def get_welcome_message():
+    """
+    This function returns a welcome message.
+    """
+    return "Welcome to Yatzee by Smaillim and Andy!"
+
+
 def print_rolls_nicely(rolls):
     """
     This function prints the rolls in a more understandable way.
@@ -87,6 +94,9 @@ def roll_multiple_dice(number_of_dice):
 
 
 if __name__ == "__main__":
+
+    print(get_welcome_message())
+
     players = user.get_player_names()
 
     for player in players:
