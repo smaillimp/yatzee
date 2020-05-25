@@ -4,7 +4,15 @@ import helpers
 
 
 def print_rolls_nicely(rolls):
+    """
+    This finction print the rolls in a more understandable way.
+    """
+
     def format_roll(name, values):
+        """
+        I don't know how to explain this function yet. 
+        """
+
         return "{: <10} {}".format(name, " | ".join([str(item) for item in values]))
 
     print(format_roll("Index", rolls.keys()))
@@ -12,6 +20,10 @@ def print_rolls_nicely(rolls):
 
 
 def play_round(player):
+    """
+    This function tells us which user should play and 
+    how many times can roll the dices again.
+    """
     print("It is {}'s turn to roll the dice.".format(player))
     rolls = roll_multiple_dice(5)
     print_rolls_nicely(rolls)
@@ -26,6 +38,9 @@ def play_round(player):
 
 
 def ask_user_if_he_wants_to_reroll():
+    """
+    This function asks users if they want to roll the dices again.
+    """
     user_input = helpers.game_input(
         "Would you like to roll again? Write 'yes' or 'no'\n>", input_type=str
     )
@@ -38,6 +53,10 @@ def ask_user_if_he_wants_to_reroll():
 
 
 def reroll(rolls):
+    """
+    This function asks users which dice they want to roll again.
+    """
+
     reroll = helpers.game_input(
         "Which dice do you want to roll again?", input_type=helpers.LIST_OF_INT
     )
@@ -49,6 +68,9 @@ def reroll(rolls):
 
 
 def roll_multiple_dice(number_of_dice):
+    """
+    This function lets us roll several dices at the same time.
+    """
     rolls = dict()
     for i in range(number_of_dice):
         rolls[i] = dice.roll_dice()

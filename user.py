@@ -2,6 +2,10 @@ import helpers
 
 
 def get_player_names():
+    """
+    This function asks how many players will play the game and
+    what are their names.
+    """
     number_of_players = helpers.game_input(
         "How many players will play the game?", input_type=int
     )
