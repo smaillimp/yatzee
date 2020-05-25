@@ -49,3 +49,13 @@ def test_game_input_returns_list_of_int():
         )
         for item in return_value:
             assert isinstance(item, int)
+
+
+def test_value_in_allowed_values():
+    with mock.patch.object(builtins, "input", lambda input_str: "123"):
+        with pytest.raises(RuntimeError):
+            helpers.game_input(
+                "Which dice do you want to roll again?",
+                input_type=helpers.LIST_OF_INT,
+                allowed_values=[0, 1, 2, 3, 4],
+            )
