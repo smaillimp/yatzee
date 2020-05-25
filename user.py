@@ -3,7 +3,7 @@ import helpers
 
 def get_number_of_players():
     """
-    This function querries the player how many people will play.
+    This function queries the player how many people will play.
     """
     try:
         number_of_players = helpers.game_input(
