@@ -66,8 +66,8 @@ def reroll(rolls):
             input_type=helpers.LIST_OF_INT,
             allowed_values=[0, 1, 2, 3, 4],
         )
-    except RuntimeError as e:
-        print(e)
+    except (RuntimeError, ValueError) as e:
+        print("Please write a valid number")
         return reroll(rolls)
     rerolls = roll_multiple_dice(len(reroll_dice))
     print_rolls_nicely(rerolls)

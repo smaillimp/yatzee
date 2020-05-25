@@ -20,9 +20,7 @@ def get_player_names():
     This function asks how many players will play the game and
     what their names are.
     """
-    number_of_players = helpers.game_input(
-        "How many players will play the game?", input_type=int
-    )
+
     number_of_players = get_number_of_players()
     print(number_of_players)
     players = list()
