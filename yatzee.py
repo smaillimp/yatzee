@@ -5,12 +5,12 @@ import helpers
 
 def print_rolls_nicely(rolls):
     """
-    This finction print the rolls in a more understandable way.
+    This function prints the rolls in a more understandable way.
     """
 
     def format_roll(name, values):
         """
-        I don't know how to explain this function yet. 
+        This function prints a line in a prefined way.
         """
 
         return "{: <10} {}".format(name, " | ".join([str(item) for item in values]))
@@ -39,16 +39,20 @@ def play_round(player):
 
 def ask_user_if_he_wants_to_reroll():
     """
-    This function asks users if they want to roll the dices again.
+    This function asks the users if they want to roll the dices again.
     """
-    user_input = helpers.game_input(
-        "Would you like to roll again? Write 'yes' or 'no'\n>", input_type=str
-    )
-    if user_input == "yes":
-        return True
-    elif user_input == "no":
-        return False
-    else:
+    try:
+        user_input = helpers.game_input(
+            "Would you like to roll again?",
+            input_type=str,
+            allowed_values=["yes", "no"],
+        )
+        if user_input == "yes":
+            return True
+        elif user_input == "no":
+            return False
+    except RuntimeError as e:
+        print("Please write 'yes' or 'no'")
         return ask_user_if_he_wants_to_reroll()
 
 
@@ -56,13 +60,18 @@ def reroll(rolls):
     """
     This function asks users which dice they want to roll again.
     """
-
-    reroll = helpers.game_input(
-        "Which dice do you want to roll again?", input_type=helpers.LIST_OF_INT
-    )
-    rerolls = roll_multiple_dice(len(reroll))
+    try:
+        reroll_dice = helpers.game_input(
+            "Which dice do you want to roll again?",
+            input_type=helpers.LIST_OF_INT,
+            allowed_values=[0, 1, 2, 3, 4],
+        )
+    except (RuntimeError, ValueError) as e:
+        print("Please write a valid number")
+        return reroll(rolls)
+    rerolls = roll_multiple_dice(len(reroll_dice))
     print_rolls_nicely(rerolls)
-    for i, dice_index in enumerate(reroll):
+    for i, dice_index in enumerate(reroll_dice):
         rolls[dice_index] = rerolls[i]
     return rolls
 
