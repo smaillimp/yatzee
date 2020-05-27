@@ -24,7 +24,3 @@ def get_fives(roll):
 
 def get_sixes(roll):
     return get_number_of_eyes_for_number(roll, 6)
-
-
-def get_three_of_a_kind(roll):
-    return
