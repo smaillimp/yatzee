@@ -77,3 +77,38 @@ def test_get_four_of_a_kind_with_no_quadruple():
     roll = {0: 6, 1: 6, 2: 2, 3: 3, 4: 6}
 
     assert combinations.get_four_of_a_kind(roll) == 0
+
+
+def test_get_pairs_of_6():
+
+    roll = {0: 6, 1: 6, 2: 2, 3: 3, 4: 1}
+
+    assert combinations.get_pairs(roll) == 12
+
+
+def test_get_pairs_with_two_pairs():
+
+    roll = {0: 6, 1: 6, 2: 5, 3: 5, 4: 1}
+
+    assert combinations.get_pairs(roll) == 12
+
+
+def test_get_pairs_with_no_pair():
+
+    roll = {0: 6, 1: 5, 2: 4, 3: 3, 4: 1}
+
+    assert combinations.get_pairs(roll) == 0
+
+
+def test_get_pairs_with_yatzee():
+
+    roll = {0: 1, 1: 1, 2: 1, 3: 1, 4: 1}
+
+    assert combinations.get_pairs(roll) == 2
+
+
+def test_get_yatzee():
+
+    roll = {0: 6, 1: 6, 2: 6, 3: 6, 4: 6}
+
+    assert combinations.get_yatzee(roll) == 50
