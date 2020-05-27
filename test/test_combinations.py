@@ -112,3 +112,24 @@ def test_get_yatzee():
     roll = {0: 6, 1: 6, 2: 6, 3: 6, 4: 6}
 
     assert combinations.get_yatzee(roll) == 50
+
+
+def test_get_just_two_pairs():
+
+    roll = {0: 6, 1: 6, 2: 5, 3: 5, 4: 2}
+
+    assert combinations.get_two_pairs(roll) == 22
+
+
+def test_get_two_pairs_in_a_yatzee():
+
+    roll = {0: 6, 1: 6, 2: 6, 3: 6, 4: 6}
+
+    assert combinations.get_two_pairs_in_a_yatzee(roll) == 24
+
+
+def test_get_two_pairs_in_four_of_a_kind():
+
+    roll = {0: 4, 1: 4, 2: 4, 3: 4, 4: 6}
+
+    assert combinations.get_two_pairs_in_four_of_a_kind(roll) == 16

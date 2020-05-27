@@ -42,6 +42,10 @@ def get_four_of_a_kind(roll):
     return get_number_of_a_kind(roll, 4)
 
 
+def get_yatzee(roll):
+    return get_number_of_a_kind(roll, 5)
+
+
 def get_number_of_a_kind(roll, number):
     number_of_hits = dict()
     for i in range(6, 0, -1):
@@ -52,7 +56,3 @@ def get_number_of_a_kind(roll, number):
             return number * i
     else:
         return 0
-
-
-def get_yatzee(roll):
-    return get_number_of_a_kind(roll, 5)
