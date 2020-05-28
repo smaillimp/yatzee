@@ -114,11 +114,13 @@ def test_get_yatzee():
     assert combinations.get_yatzee(roll) == 50
 
 
+# TO DO:
+
 def test_get_just_two_pairs():
 
     roll = {0: 6, 1: 6, 2: 5, 3: 5, 4: 2}
 
-    assert combinations.get_two_pairs(roll) == 22
+    assert combinations.get_just_two_pairs(roll) == 22
 
 
 def test_get_two_pairs_in_a_yatzee():
