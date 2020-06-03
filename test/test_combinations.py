@@ -114,24 +114,42 @@ def test_get_yatzee():
     assert combinations.get_yatzee(roll) == 50
 
 
-# TO DO:
-
 def test_get_just_two_pairs():
 
     roll = {0: 6, 1: 6, 2: 5, 3: 5, 4: 2}
 
-    assert combinations.get_just_two_pairs(roll) == 22
+    assert combinations.get_two_pairs(roll) == 22
 
 
 def test_get_two_pairs_in_a_yatzee():
 
     roll = {0: 6, 1: 6, 2: 6, 3: 6, 4: 6}
 
-    assert combinations.get_two_pairs_in_a_yatzee(roll) == 24
+    assert combinations.get_two_pairs(roll) == 24
 
 
 def test_get_two_pairs_in_four_of_a_kind():
 
     roll = {0: 4, 1: 4, 2: 4, 3: 4, 4: 6}
 
-    assert combinations.get_two_pairs_in_four_of_a_kind(roll) == 16
+    assert combinations.get_two_pairs(roll) == 16
+
+
+def test_get_two_pairs_in_one_pair():
+
+    roll = {0: 4, 1: 4, 2: 2, 3: 4, 4: 6}
+
+    assert combinations.get_two_pairs(roll) == 16
+
+
+def checkEqual(list_1, list_2):
+    return sorted(list_1) == sorted(list_2)
+
+
+def test_remove_dice_from_roll():
+    roll = {0: 6, 1: 3, 2: 6, 3: 5, 4: 5}
+    roll_without_6 = {0: 5, 1: 5, 2: 3}
+    assert checkEqual(
+        combinations.remove_dice_from_roll(roll, [6, 6]).values(),
+        roll_without_6.values(),
+    )
