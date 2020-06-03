@@ -1,5 +1,3 @@
-import copy
-
 # Aces, Twos, Threes, Fours, fives and Sixes
 
 
@@ -35,33 +33,30 @@ def get_sixes(roll):
     return get_number_of_eyes_for_number(roll, 6)
 
 
-def get_number_of_kind_resursively(roll, number_of_kinds, number_of_kind, eyes):
-    recursive_n_of_kinds = remove_element(number_of_kinds, number_of_kind)
-    recurisve_roll = remove_dice_from_roll(roll, [eyes] * number_of_kind)
-    return get_points_for_number_of_a_kinds(recurisve_roll, recursive_n_of_kinds)
-
-
-def remove_element(number_of_kinds, number_of_kind):
-    recursive_n_of_kinds = copy.copy(number_of_kinds)
-    recursive_n_of_kinds.remove(number_of_kind)
-    return recursive_n_of_kinds
-
-
-def get_points_for_number_of_a_kinds(roll, number_of_kinds):
+def get_points_for_number_of_a_kinds(roll, number_of_kinds, points=0):
     number_of_kind = sorted(number_of_kinds)[-1]
+    number_of_kinds.remove(number_of_kind)
+    points = get_points_for_number_of_a_kind(
+        roll, number_of_kind, number_of_kinds, points
+    )
+    return points
+
+
+def get_points_for_number_of_a_kind(roll, number_of_kind, number_of_kinds, points):
     for eyes in range(6, 0, -1):
         number_of_hits = get_number_of_hits_for_number(roll, eyes)
         if number_of_hits >= number_of_kind:
-            points = number_of_kind * eyes
-            if len(number_of_kinds) > 1:
-                recursive_points = get_number_of_kind_resursively(
-                    roll, number_of_kinds, number_of_kind, eyes
+            points += number_of_kind * eyes
+            if len(number_of_kinds) > 0:
+                points = get_points_for_number_of_a_kinds(
+                    remove_dice_from_roll(roll, [eyes] * number_of_kind),
+                    number_of_kinds,
+                    points,
                 )
-                return points + recursive_points if recursive_points != 0 else 0
-            else:
-                return points
+            break
     else:
-        return 0
+        points = 0
+    return points
 
 
 def remove_dice_from_roll(roll, dice_to_remove):
