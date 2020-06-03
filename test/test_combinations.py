@@ -139,7 +139,7 @@ def test_get_two_pairs_in_one_pair():
 
     roll = {0: 4, 1: 4, 2: 2, 3: 4, 4: 6}
 
-    assert combinations.get_two_pairs(roll) == 16
+    assert combinations.get_two_pairs(roll) == 0
 
 
 def checkEqual(list_1, list_2):
@@ -153,3 +153,24 @@ def test_remove_dice_from_roll():
         combinations.remove_dice_from_roll(roll, [6, 6]).values(),
         roll_without_6.values(),
     )
+
+
+def test_get_full_house():
+
+    roll = {0: 5, 1: 3, 2: 5, 3: 3, 4: 5}
+
+    assert combinations.get_full_house(roll) == 25
+
+
+def test_get_full_house_with_no_pairs():
+
+    roll = {0: 5, 1: 2, 2: 5, 3: 3, 4: 5}
+
+    assert combinations.get_full_house(roll) == 0
+
+
+def test_get_full_house_with_no_three_of_a_kind():
+
+    roll = {0: 5, 1: 2, 2: 5, 3: 3, 4: 6}
+
+    assert combinations.get_full_house(roll) == 0

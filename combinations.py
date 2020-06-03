@@ -1,3 +1,5 @@
+import copy
+
 # Aces, Twos, Threes, Fours, fives and Sixes
 
 
@@ -33,24 +35,31 @@ def get_sixes(roll):
     return get_number_of_eyes_for_number(roll, 6)
 
 
-# Pair, Trio, Quad and Yatzee
+def get_number_of_kind_resursively(roll, number_of_kinds, number_of_kind, eyes):
+    recursive_n_of_kinds = remove_element(number_of_kinds, number_of_kind)
+    recurisve_roll = remove_dice_from_roll(roll, [eyes] * number_of_kind)
+    return get_points_for_number_of_a_kinds(recurisve_roll, recursive_n_of_kinds)
 
 
-def get_number_of_a_kind(roll, number, recursive=0):
-    number_of_hits = dict()
-    for i in range(6, 0, -1):
-        number_of_hits[i] = get_number_of_hits_for_number(roll, i)
-        if number_of_hits[i] >= number:
-            if number == 5:
-                return 50
-            if recursive > 0:
-                return number * i + get_number_of_a_kind(
-                    remove_dice_from_roll(roll, [i] * number),
-                    number,
-                    recursive=recursive - 1,
+def remove_element(number_of_kinds, number_of_kind):
+    recursive_n_of_kinds = copy.copy(number_of_kinds)
+    recursive_n_of_kinds.remove(number_of_kind)
+    return recursive_n_of_kinds
+
+
+def get_points_for_number_of_a_kinds(roll, number_of_kinds):
+    number_of_kind = sorted(number_of_kinds)[-1]
+    for eyes in range(6, 0, -1):
+        number_of_hits = get_number_of_hits_for_number(roll, eyes)
+        if number_of_hits >= number_of_kind:
+            points = number_of_kind * eyes
+            if len(number_of_kinds) > 1:
+                recursive_points = get_number_of_kind_resursively(
+                    roll, number_of_kinds, number_of_kind, eyes
                 )
+                return points + recursive_points if recursive_points != 0 else 0
             else:
-                return number * i
+                return points
     else:
         return 0
 
@@ -66,20 +75,24 @@ def remove_dice_from_roll(roll, dice_to_remove):
 
 
 def get_pairs(roll):
-    return get_number_of_a_kind(roll, 2)
+    return get_points_for_number_of_a_kinds(roll, [2])
 
 
 def get_three_of_a_kind(roll):
-    return get_number_of_a_kind(roll, 3)
+    return get_points_for_number_of_a_kinds(roll, [3])
 
 
 def get_four_of_a_kind(roll):
-    return get_number_of_a_kind(roll, 4)
+    return get_points_for_number_of_a_kinds(roll, [4])
 
 
 def get_yatzee(roll):
-    return get_number_of_a_kind(roll, 5)
+    return 50 if get_points_for_number_of_a_kinds(roll, [5]) != 0 else 0
 
 
 def get_two_pairs(roll):
-    return get_number_of_a_kind(roll, number=2, recursive=1)
+    return get_points_for_number_of_a_kinds(roll, [2, 2])
+
+
+def get_full_house(roll):
+    return 25 if get_points_for_number_of_a_kinds(roll, [3, 2]) != 0 else 0
