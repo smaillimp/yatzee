@@ -129,3 +129,14 @@ def get_full_house(roll):
     This function returs 25 if we have three of a kind and a pair.
     """
     return 25 if get_points_for_number_of_a_kinds(roll, [3, 2]) != 0 else 0
+
+
+def get_small_straight(roll):
+    return 30 if
+
+
+def get_large_straight(roll):
+    retur 40 if 
+
+def sort_dices_from_roll():
+    

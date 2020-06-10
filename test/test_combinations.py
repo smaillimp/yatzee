@@ -174,3 +174,31 @@ def test_get_full_house_with_no_three_of_a_kind():
     roll = {0: 5, 1: 2, 2: 5, 3: 3, 4: 6}
 
     assert combinations.get_full_house(roll) == 0
+
+
+def test_get_small_straight():
+
+    roll = {0: 3, 1: 1, 2: 2, 3: 5, 4: 4}
+
+    assert combinations.get_small_straight(roll) == 30
+
+
+def test_get_small_straight_with_no_straight():
+
+    roll = {0: 3, 1: 1, 2: 2, 3: 6, 4: 4}
+
+    assert combinations.get_small_straight(roll) == 0
+
+
+def test_get_large_straight():
+
+    roll = {0: 3, 1: 6, 2: 2, 3: 5, 4: 4}
+
+    assert combinations.get_large_straight(roll) == 40
+
+
+def test_get_large_straight_with_no_straight():
+
+    roll = {0: 3, 1: 5, 2: 2, 3: 5, 4: 4}
+
+    assert combinations.get_large_straight(roll) == 0
