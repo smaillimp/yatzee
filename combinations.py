@@ -8,6 +8,7 @@ def get_number_of_eyes_for_number(roll, number):
 def get_number_of_hits_for_number(roll, number):
     return [roll[key] for key in roll].count(number)
 
+
 def get_aces(roll):
     """
     This function returns the aces we got.
@@ -105,14 +106,14 @@ def get_three_of_a_kind(roll):
 
 def get_four_of_a_kind(roll):
     """
-    This function returns five of the same kind
+    This function returns four of the same kind
     """
     return get_points_for_number_of_a_kinds(roll, [4])
 
 
 def get_yatzee(roll):
     """
-    This function returns four of the same kind.
+    This function returns five of the same kind.
     """
     return 50 if get_points_for_number_of_a_kinds(roll, [5]) != 0 else 0
 
@@ -131,12 +132,38 @@ def get_full_house(roll):
     return 25 if get_points_for_number_of_a_kinds(roll, [3, 2]) != 0 else 0
 
 
+def get_big_straight(roll):
+    return get_straights(roll, [2, 3, 4, 5, 6], 40)
+
+
 def get_small_straight(roll):
-    return 30 if
+    return get_straights(roll, [1, 2, 3, 4, 5], 30)
 
 
-def get_large_straight(roll):
-    retur 40 if 
+def get_straights(roll, straight, points):
+    for e in straight:
+        if not e in roll.values():
+            return 0
+    else:
+        return points
 
-def sort_dices_from_roll():
-    
+
+upper_bracket_combinations = {
+    "aces": get_aces,
+    "twos": get_twos,
+    "threes": get_threes,
+    "fours": get_fours,
+    "fives": get_fives,
+    "sixes": get_sixes,
+}
+
+lower_bracket_combinations = {
+    "pairs": get_pairs,
+    "two pairs": get_two_pairs,
+    "three of a kind": get_three_of_a_kind,
+    "four of a kind": get_four_of_a_kind,
+    "full house": get_full_house,
+    "small straight": get_small_straight,
+    "big straight": get_big_straight,
+    "yatzee": get_yatzee,
+}

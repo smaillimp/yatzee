@@ -1,6 +1,7 @@
 import dice
 import user
 import helpers
+import combinations
 
 
 def get_welcome_message():
@@ -26,6 +27,15 @@ def print_rolls_nicely(rolls):
     print(format_roll("Values", rolls.values()))
 
 
+def print_possible_results(rolls):
+    print("These are the options you have...")
+    print("Upper Bracket")
+    combs = combinations.upper_bracket_combinations
+    for combination in combs:
+        print(combination)
+        print(combs[combination](rolls))
+
+
 def play_round(player):
     """
     This function tells us which user should play and 
@@ -34,12 +44,14 @@ def play_round(player):
     print("It is {}'s turn to roll the dice.".format(player))
     rolls = roll_multiple_dice(5)
     print_rolls_nicely(rolls)
+    print_possible_results(rolls)
     rerolls = 2
     for i in range(2):
         print("You can reroll {} times...".format(2 - i))
         if ask_user_if_he_wants_to_reroll():
             rolls = reroll(rolls)
             print_rolls_nicely(rolls)
+            print_possible_results(rolls)
         else:
             break
 
