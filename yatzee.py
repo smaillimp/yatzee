@@ -44,6 +44,21 @@ def print_results_nicely(var, rolls, spacing=20):
 
 
 def get_selected_combination(rolls):
+    
+    try:
+        seletect_combination = helpers.game_input(
+            "which combination would you like to select?: ", input_type=str,
+             allowed_values = list(combinations.upper_bracket_combinations.keys())
+              + list(combinations.lower_bracket_combinations.keys())
+        )
+        return combinations
+    except RuntimeError as e:
+        print(e)
+        print("Please enter a valid combination.")
+        return get_selected_combination(rolls)
+
+
+
     """
     1. ask player to input which combination he'd like to use.
     2. confirm that it actually is a valid combination
