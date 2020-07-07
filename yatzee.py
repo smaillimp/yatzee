@@ -27,13 +27,24 @@ def print_rolls_nicely(rolls):
     print(format_roll("Values", rolls.values()))
 
 
-def print_possible_results(rolls):
+def print_possible_results(rolls, spacing=20):
     print("These are the options you have...")
-    print("Upper Bracket")
-    combs = combinations.upper_bracket_combinations
-    for combination in combs:
-        print(combination)
-        print(combs[combination](rolls))
+    ucombs = combinations.upper_bracket_combinations
+    lcombs = combinations.lower_bracket_combinations
+    print("Upper Bracket") 
+    print_results_nicely(ucombs, rolls)
+    print()
+    print("Lower Bracket") 
+    print_results_nicely(lcombs, rolls)
+
+
+def print_results_nicely(var, rolls, spacing=20):
+    for combination in var:
+        print(f"{combination: <{spacing}}{var[combination](rolls): <{spacing}}")
+
+    #print("{}\t{}".format(combination, combs[combination](rolls)))
+    #print(combination)
+    #print(combs[combination](rolls))
 
 
 def play_round(player):
