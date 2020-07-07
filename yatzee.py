@@ -31,10 +31,10 @@ def print_possible_results(rolls, spacing=20):
     print("These are the options you have...")
     ucombs = combinations.upper_bracket_combinations
     lcombs = combinations.lower_bracket_combinations
-    print("Upper Bracket") 
+    print("Upper Bracket")
     print_results_nicely(ucombs, rolls)
     print()
-    print("Lower Bracket") 
+    print("Lower Bracket")
     print_results_nicely(lcombs, rolls)
 
 
@@ -42,9 +42,14 @@ def print_results_nicely(var, rolls, spacing=20):
     for combination in var:
         print(f"{combination: <{spacing}}{var[combination](rolls): <{spacing}}")
 
-    #print("{}\t{}".format(combination, combs[combination](rolls)))
-    #print(combination)
-    #print(combs[combination](rolls))
+
+def get_selected_combination(rolls):
+    """
+    1. ask player to input which combination he'd like to use.
+    2. confirm that it actually is a valid combination
+    3. display points for combination and ask for confimation.
+    """
+    pass
 
 
 def play_round(player):
@@ -65,6 +70,7 @@ def play_round(player):
             print_possible_results(rolls)
         else:
             break
+    get_selected_combination(rolls)
 
 
 def ask_user_if_he_wants_to_reroll():
