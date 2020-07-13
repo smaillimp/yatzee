@@ -27,37 +27,35 @@ def print_rolls_nicely(rolls):
     print(format_roll("Values", rolls.values()))
 
 
-def print_possible_results(rolls, spacing=20):
+def print_possible_results(rolls, player_result):
     print("These are the options you have...")
-    ucombs = combinations.upper_bracket_combinations
-    lcombs = combinations.lower_bracket_combinations
-    print("Upper Bracket")
-    print_results_nicely(ucombs, rolls)
-    print()
-    print("Lower Bracket")
-    print_results_nicely(lcombs, rolls)
+    for bracket in combinations.playable_brackets:
+        print(bracket)
+        print_results_nicely(combinations.brackets[bracket], rolls, player_result)
 
 
-def print_results_nicely(var, rolls, spacing=20):
-    for combination in var:
-        print(f"{combination: <{spacing}}{var[combination](rolls): <{spacing}}")
+def print_results_nicely(combs, rolls, player_result):
+    playable_combinations = [
+        combination
+        for combination in combs
+        if combination in combinations.get_selectable_combinations(player_result)
+    ]
+    for combination in playable_combinations:
+        print(f"{combination: <{20}}{combs[combination](rolls)}")
 
 
-def get_selected_combination(rolls):
-    
+def get_selected_combination(rolls, player_result):
     try:
-        seletect_combination = helpers.game_input(
-            "which combination would you like to select?: ", input_type=str,
-             allowed_values = list(combinations.upper_bracket_combinations.keys())
-              + list(combinations.lower_bracket_combinations.keys())
+        selected_combination = helpers.game_input(
+            "which combination would you like to select?: ",
+            input_type=str,
+            allowed_values=combinations.get_selectable_combinations(player_result),
         )
-        return combinations
+        return selected_combination
     except RuntimeError as e:
         print(e)
         print("Please enter a valid combination.")
-        return get_selected_combination(rolls)
-
-
+        return get_selected_combination(rolls, player_result)
 
     """
     1. ask player to input which combination he'd like to use.
@@ -67,7 +65,7 @@ def get_selected_combination(rolls):
     pass
 
 
-def play_round(player):
+def play_round(player, player_result):
     """
     This function tells us which user should play and 
     how many times can roll the dices again.
@@ -75,17 +73,20 @@ def play_round(player):
     print("It is {}'s turn to roll the dice.".format(player))
     rolls = roll_multiple_dice(5)
     print_rolls_nicely(rolls)
-    print_possible_results(rolls)
+    print_possible_results(rolls, player_result)
     rerolls = 2
     for i in range(2):
         print("You can reroll {} times...".format(2 - i))
         if ask_user_if_he_wants_to_reroll():
             rolls = reroll(rolls)
             print_rolls_nicely(rolls)
-            print_possible_results(rolls)
+            print_possible_results(rolls, player_result)
         else:
             break
-    get_selected_combination(rolls)
+    selected_combination = get_selected_combination(rolls, player_result)
+    player_result = combinations.update_result(
+        rolls, selected_combination, player_result
+    )
 
 
 def ask_user_if_he_wants_to_reroll():
@@ -137,11 +138,49 @@ def roll_multiple_dice(number_of_dice):
     return rolls
 
 
+def print_results_for_all_players(player_result):
+    line_fomat = "".join(["{: <20}"] * (1 + len(list(player_result.keys()))))
+    print(line_fomat.format("", *list(player_result.keys())))
+    player_0 = list(player_result.keys())[0]
+    for bracket in player_result[player_0]:
+        print(bracket)
+        for combination in player_result[player_0][bracket]:
+            print(
+                line_fomat.format(
+                    combination,
+                    *[
+                        str(player_result[player][bracket][combination])
+                        for player in player_result
+                    ],
+                )
+            )
+        print("\n")
+    print(
+        line_fomat.format(
+            "Sum",
+            *[combinations.get_sum(player_result[player]) for player in player_result],
+        )
+    )
+
+
 if __name__ == "__main__":
 
     print(get_welcome_message())
 
     players = user.get_player_names()
+    player_results = {player: combinations.get_empty_results() for player in players}
 
-    for player in players:
-        play_round(player)
+    while (
+        len(
+            combinations.get_selectable_combinations(
+                player_results[list(player_results.keys())[0]]
+            )
+        )
+        > 0
+    ):
+        for player in player_results:
+            print("\n\n\n")
+            print_results_for_all_players(player_results)
+            print("\n\n\n")
+            play_round(player, player_results[player])
+

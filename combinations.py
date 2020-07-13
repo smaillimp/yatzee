@@ -148,6 +148,62 @@ def get_straights(roll, straight, points):
         return points
 
 
+def get_all_combinations():
+    return list(upper_bracket_combinations.keys()) + list(
+        lower_bracket_combinations.keys()
+    )
+
+
+def get_empty_results():
+    return {
+        bracket: {combination: None for combination in brackets[bracket]}
+        for bracket in brackets
+    }
+
+
+def get_selectable_combinations(result):
+    selectable = list()
+    for bracket in playable_brackets:
+        for combination in result[bracket]:
+            if result[bracket][combination] is None:
+                selectable.append(combination)
+    return selectable
+
+
+def get_bracket_by_combination_name(combination):
+    for bracket in brackets:
+        for comb in brackets[bracket]:
+            if comb == combination:
+                return bracket
+    else:
+        raise KeyError(f"{combination} is not a valid combination.")
+
+
+def update_result(roll, combination, player_result):
+    bracket = get_bracket_by_combination_name(combination)
+    points = brackets[bracket][combination](roll)
+    player_result[bracket][combination] = points
+    player_result = check_and_apply_bonus(player_result)
+    return player_result
+
+
+def check_and_apply_bonus(player_result, threshold=63):
+    if get_sum(player_result, brackets=["Upper Bracket"]) >= threshold:
+        player_result["Middle Bracket"]["bonus"] = 35
+    return player_result
+
+
+def get_sum(player_result, brackets=None):
+    points = 0
+    if brackets is None:
+        brackets = player_result.keys()
+    for bracket in brackets:
+        for combination in player_result[bracket]:
+            cp = player_result[bracket][combination]
+            points += cp if cp is not None else 0
+    return points
+
+
 upper_bracket_combinations = {
     "aces": get_aces,
     "twos": get_twos,
@@ -155,6 +211,10 @@ upper_bracket_combinations = {
     "fours": get_fours,
     "fives": get_fives,
     "sixes": get_sixes,
+}
+
+middle_bracket_combinations = {
+    "bonus": None,
 }
 
 lower_bracket_combinations = {
@@ -166,4 +226,15 @@ lower_bracket_combinations = {
     "small straight": get_small_straight,
     "big straight": get_big_straight,
     "yatzee": get_yatzee,
+}
+
+playable_brackets = {
+    "Upper Bracket": upper_bracket_combinations,
+    "Lower Bracket": lower_bracket_combinations,
+}
+
+brackets = {
+    "Upper Bracket": upper_bracket_combinations,
+    "Middle Bracket": middle_bracket_combinations,
+    "Lower Bracket": lower_bracket_combinations,
 }

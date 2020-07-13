@@ -1,5 +1,6 @@
 import pytest
 import combinations
+import copy
 
 
 def test_get_aces():
@@ -194,3 +195,145 @@ def test_get_small_straight():
 def test_get_small_straight_with_no_hit():
     roll = {0: 5, 1: 2, 2: 6, 3: 1, 4: 6}
     assert combinations.get_small_straight(roll) == 0
+
+
+def test_get_all_combinations():
+    assert combinations.get_all_combinations() == [
+        "aces",
+        "twos",
+        "threes",
+        "fours",
+        "fives",
+        "sixes",
+        "pairs",
+        "two pairs",
+        "three of a kind",
+        "four of a kind",
+        "full house",
+        "small straight",
+        "big straight",
+        "yatzee",
+    ]
+
+
+def test_get_empty_results():
+    upper_bracket_results = {
+        "aces": None,
+        "twos": None,
+        "threes": None,
+        "fours": None,
+        "fives": None,
+        "sixes": None,
+    }
+
+    middle_bracket_results = {
+        "bonus": None,
+    }
+
+    lower_bracket_results = {
+        "pairs": None,
+        "two pairs": None,
+        "three of a kind": None,
+        "four of a kind": None,
+        "full house": None,
+        "small straight": None,
+        "big straight": None,
+        "yatzee": None,
+    }
+    assert combinations.get_empty_results() == {
+        "Upper Bracket": upper_bracket_results,
+        "Middle Bracket": middle_bracket_results,
+        "Lower Bracket": lower_bracket_results,
+    }
+
+
+def test_get_selectable_combinations():
+    upper_bracket_results = {
+        "aces": 1,
+        "twos": None,
+    }
+    lower_bracket_results = {
+        "pairs": 4,
+        "two pairs": None,
+    }
+    player_result = {
+        "Upper Bracket": upper_bracket_results,
+        "Lower Bracket": lower_bracket_results,
+    }
+    assert combinations.get_selectable_combinations(player_result) == [
+        "twos",
+        "two pairs",
+    ]
+
+
+def test_get_bracket_by_combination_name():
+    assert combinations.get_bracket_by_combination_name("aces") == "Upper Bracket"
+
+
+def test_get_bracket_by_combination_name():
+    with pytest.raises(KeyError):
+        combinations.get_bracket_by_combination_name("12255")
+
+
+def test_update_result():
+    roll = {0: 2, 1: 2, 2: 2, 3: 1, 4: 2}
+    upper_bracket_results = {
+        "aces": 1,
+        "twos": None,
+    }
+    lower_bracket_results = {
+        "pairs": 4,
+        "two pairs": None,
+    }
+    player_result = {
+        "Upper Bracket": upper_bracket_results,
+        "Lower Bracket": lower_bracket_results,
+    }
+    player_end_result = {
+        "Upper Bracket": copy.copy(upper_bracket_results),
+        "Lower Bracket": copy.copy(lower_bracket_results),
+    }
+    player_end_result["Upper Bracket"]["twos"] = 8
+    assert combinations.update_result(roll, "twos", player_result) == player_end_result
+
+
+def test_get_sum():
+    upper_bracket_results = {
+        "aces": 1,
+        "twos": None,
+    }
+    lower_bracket_results = {
+        "pairs": 4,
+        "two pairs": None,
+    }
+    player_result = {
+        "Upper Bracket": upper_bracket_results,
+        "Lower Bracket": lower_bracket_results,
+    }
+    assert combinations.get_sum(player_result) == 5
+
+
+@pytest.mark.parametrize("aces,expected", [(50, 50), (62, 62), (63, 98), (65, 100)])
+def test_check_and_apply_bonus(aces, expected):
+    upper_bracket_results = {
+        "aces": aces,
+        "twos": None,
+    }
+    middle_bracket_results = {
+        "bonus": None,
+    }
+    player_result = {
+        "Upper Bracket": upper_bracket_results,
+        "Middle Bracket": middle_bracket_results,
+    }
+    assert (
+        combinations.get_sum(combinations.check_and_apply_bonus(player_result))
+        == expected
+    )
+
+
+def test_bonus_not_in_selectable_combinations():
+    assert "bonus" not in combinations.get_selectable_combinations(
+        combinations.get_empty_results()
+    )
+
