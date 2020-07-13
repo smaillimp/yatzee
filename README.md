@@ -42,3 +42,6 @@ You might do so using pip:
 
 `pip install -U pytest mock`
 
+to reset local
+
+`git reset --hard`
