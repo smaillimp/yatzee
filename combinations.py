@@ -206,11 +206,11 @@ def get_sum(player_result, brackets=None):
 
 upper_bracket_combinations = {
     "aces": get_aces,
-    "twos": get_twos,
-    "threes": get_threes,
-    "fours": get_fours,
-    "fives": get_fives,
-    "sixes": get_sixes,
+    #    "twos": get_twos,
+    #    "threes": get_threes,
+    #    "fours": get_fours,
+    #    "fives": get_fives,
+    #    "sixes": get_sixes,
 }
 
 middle_bracket_combinations = {
@@ -219,13 +219,13 @@ middle_bracket_combinations = {
 
 lower_bracket_combinations = {
     "pairs": get_pairs,
-    "two pairs": get_two_pairs,
-    "three of a kind": get_three_of_a_kind,
-    "four of a kind": get_four_of_a_kind,
-    "full house": get_full_house,
-    "small straight": get_small_straight,
-    "big straight": get_big_straight,
-    "yatzee": get_yatzee,
+    #    "two pairs": get_two_pairs,
+    #    "three of a kind": get_three_of_a_kind,
+    #    "four of a kind": get_four_of_a_kind,
+    #    "full house": get_full_house,
+    #    "small straight": get_small_straight,
+    #    "big straight": get_big_straight,
+    #    "yatzee": get_yatzee,
 }
 
 playable_brackets = {

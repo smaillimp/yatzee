@@ -184,3 +184,13 @@ if __name__ == "__main__":
             print("\n\n\n")
             play_round(player, player_results[player])
 
+    scores = list()
+    for player in player_results:
+        scores.append([player, combinations.get_sum(player_results[player])])
+
+    sorted_scores = sorted(scores, key=lambda x: x[1])
+
+    print("\n\n\n")
+    for rank, (player, score) in enumerate(scores):
+        print(f"{rank+1}. rank with a score of {score}: {player}")
+
