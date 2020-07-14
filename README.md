@@ -36,11 +36,11 @@ To check the current status, type
 
 For testing, install the following modules:
 
-`pytest`, `mock`
+`pytest`, `pytest-mock`
 
 You might do so using pip:
 
-`pip install -U pytest mock`
+`pip install -U pytest pytest-mock`
 
 to reset local
 

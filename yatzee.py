@@ -3,12 +3,21 @@ import user
 import helpers
 import combinations
 
+__author__ = "Smaillim and Andy"
 
-def get_welcome_message():
+REROLLS = 2
+NUMBER_OF_DICE = 5
+
+
+def print_welcome_message(authors=__author__):
     """
     This function returns a welcome message.
     """
-    return "Welcome to Yatzee by Smaillim and Andy!"
+    print(f"Welcome to Yatzee by {authors}!")
+
+
+def print_vertical_spaces(number_of_new_lines=3):
+    print("\n" * number_of_new_lines)
 
 
 def print_rolls_nicely(rolls):
@@ -27,66 +36,79 @@ def print_rolls_nicely(rolls):
     print(format_roll("Values", rolls.values()))
 
 
-def print_possible_results(rolls, player_result):
+def print_possible_results(rolls, players):
     print("These are the options you have...")
     for bracket in combinations.playable_brackets:
         print(bracket)
-        print_results_nicely(combinations.brackets[bracket], rolls, player_result)
+        print_results_nicely(combinations.brackets[bracket], rolls, players)
 
 
-def print_results_nicely(combs, rolls, player_result):
+def print_results_nicely(combs, rolls, players):
     playable_combinations = [
         combination
         for combination in combs
-        if combination in combinations.get_selectable_combinations(player_result)
+        if combination in combinations.get_selectable_combinations(players)
     ]
     for combination in playable_combinations:
         print(f"{combination: <{20}}{combs[combination](rolls)}")
 
 
-def get_selected_combination(rolls, player_result):
+def print_end_scores(players):
+    scores = get_scores(players)
+    print_vertical_spaces()
+    for rank, (player, score) in enumerate(scores):
+        print(f"{rank+1}. rank with a score of {score}: {player}")
+
+
+def get_scores(players):
+    scores = list()
+    for player in players:
+        scores.append([player, combinations.get_sum(players[player])])
+    sorted_scores = sorted(scores, key=lambda x: x[1])
+    return sorted_scores
+
+
+def get_selected_combination(rolls, players):
     try:
         selected_combination = helpers.game_input(
             "which combination would you like to select?: ",
             input_type=str,
-            allowed_values=combinations.get_selectable_combinations(player_result),
+            allowed_values=combinations.get_selectable_combinations(players),
         )
         return selected_combination
     except RuntimeError as e:
         print(e)
         print("Please enter a valid combination.")
-        return get_selected_combination(rolls, player_result)
-
-    """
-    1. ask player to input which combination he'd like to use.
-    2. confirm that it actually is a valid combination
-    3. display points for combination and ask for confimation.
-    """
-    pass
+        return get_selected_combination(rolls, players)
 
 
-def play_round(player, player_result):
+def print_rolls_and_possible_results(rolls, players):
+    print_rolls_nicely(rolls)
+    print_possible_results(rolls, players)
+
+
+def roll_a_round(players):
+    rolls = roll_multiple_dice(NUMBER_OF_DICE)
+    print_rolls_and_possible_results(rolls, players)
+    for i in range(REROLLS):
+        print("You can reroll {} times...".format(REROLLS - i))
+        if ask_user_if_he_wants_to_reroll():
+            rolls = reroll(rolls)
+            print_rolls_and_possible_results(rolls, players)
+        else:
+            break
+    return rolls
+
+
+def play_round(player, players):
     """
     This function tells us which user should play and 
     how many times can roll the dices again.
     """
     print("It is {}'s turn to roll the dice.".format(player))
-    rolls = roll_multiple_dice(5)
-    print_rolls_nicely(rolls)
-    print_possible_results(rolls, player_result)
-    rerolls = 2
-    for i in range(2):
-        print("You can reroll {} times...".format(2 - i))
-        if ask_user_if_he_wants_to_reroll():
-            rolls = reroll(rolls)
-            print_rolls_nicely(rolls)
-            print_possible_results(rolls, player_result)
-        else:
-            break
-    selected_combination = get_selected_combination(rolls, player_result)
-    player_result = combinations.update_result(
-        rolls, selected_combination, player_result
-    )
+    rolls = roll_a_round(players)
+    selected_combination = get_selected_combination(rolls, players)
+    players = combinations.update_result(rolls, selected_combination, players)
 
 
 def ask_user_if_he_wants_to_reroll():
@@ -103,7 +125,7 @@ def ask_user_if_he_wants_to_reroll():
             return True
         elif user_input == "no":
             return False
-    except RuntimeError as e:
+    except RuntimeError:
         print("Please write 'yes' or 'no'")
         return ask_user_if_he_wants_to_reroll()
 
@@ -118,11 +140,10 @@ def reroll(rolls):
             input_type=helpers.LIST_OF_INT,
             allowed_values=[0, 1, 2, 3, 4],
         )
-    except (RuntimeError, ValueError) as e:
+    except (RuntimeError, ValueError):
         print("Please write a valid number")
         return reroll(rolls)
     rerolls = roll_multiple_dice(len(reroll_dice))
-    print_rolls_nicely(rerolls)
     for i, dice_index in enumerate(reroll_dice):
         rolls[dice_index] = rerolls[i]
     return rolls
@@ -138,59 +159,62 @@ def roll_multiple_dice(number_of_dice):
     return rolls
 
 
-def print_results_for_all_players(player_result):
-    line_fomat = "".join(["{: <20}"] * (1 + len(list(player_result.keys()))))
-    print(line_fomat.format("", *list(player_result.keys())))
-    player_0 = list(player_result.keys())[0]
-    for bracket in player_result[player_0]:
+def get_line_format(players):
+    return "".join(["{: <20}"] * (1 + len(list(players.keys()))))
+
+
+def print_score_line(*args, line_format=""):
+    print(line_format.format(*args))
+
+
+def print_scores(players):
+    line_format = get_line_format(players)
+    print_score_line("", *list(players.keys()), line_format=line_format)
+    player_0 = list(players.keys())[0]
+    for bracket in players[player_0]:
         print(bracket)
-        for combination in player_result[player_0][bracket]:
-            print(
-                line_fomat.format(
-                    combination,
-                    *[
-                        str(player_result[player][bracket][combination])
-                        for player in player_result
-                    ],
-                )
+        for combination in players[player_0][bracket]:
+            print_score_line(
+                combination,
+                *get_score_for_combination(bracket, combination, players),
+                line_format=line_format,
             )
-        print("\n")
-    print(
-        line_fomat.format(
-            "Sum",
-            *[combinations.get_sum(player_result[player]) for player in player_result],
-        )
+        print_vertical_spaces(number_of_new_lines=1)
+    print_score_line("Sum", *get_sum_for_players(players), line_format=line_format)
+
+
+def get_score_for_combination(bracket, combination, players):
+    return [str(players[player][bracket][combination]) for player in players]
+
+
+def get_sum_for_players(players):
+    return [combinations.get_sum(players[player]) for player in players]
+
+
+def set_up_players():
+    return {
+        player: combinations.get_empty_results() for player in user.get_player_names()
+    }
+
+
+def get_numbers_of_rounds_to_play(players):
+    return len(
+        combinations.get_selectable_combinations(players[list(players.keys())[0]])
     )
 
 
+def play_game(players):
+    while get_numbers_of_rounds_to_play(players) > 0:
+        for player in players:
+            print_vertical_spaces()
+            print_scores(players)
+            print_vertical_spaces()
+            play_round(player, players[player])
+
+
 if __name__ == "__main__":
-
-    print(get_welcome_message())
-
-    players = user.get_player_names()
-    player_results = {player: combinations.get_empty_results() for player in players}
-
-    while (
-        len(
-            combinations.get_selectable_combinations(
-                player_results[list(player_results.keys())[0]]
-            )
-        )
-        > 0
-    ):
-        for player in player_results:
-            print("\n\n\n")
-            print_results_for_all_players(player_results)
-            print("\n\n\n")
-            play_round(player, player_results[player])
-
-    scores = list()
-    for player in player_results:
-        scores.append([player, combinations.get_sum(player_results[player])])
-
-    sorted_scores = sorted(scores, key=lambda x: x[1])
-
-    print("\n\n\n")
-    for rank, (player, score) in enumerate(scores):
-        print(f"{rank+1}. rank with a score of {score}: {player}")
+    print_welcome_message()
+    players = set_up_players()
+    play_game(players)
+    print_end_scores(players)
 
