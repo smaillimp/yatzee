@@ -3,13 +3,19 @@ My first game
 
 To work on the project do the following:
 
+To activate the virtual environment on windows
 ```
 python -m venv venv
 source venv/Scripts/activate
 ```
 
-To add a file to git, do the following:
+To activate the virtual environment on Linux
+```
+python -m venv venv
+Source venv/bin/activate
+```
 
+To add a file to git, do the following:
 
 ```
 touch filename.py
@@ -41,6 +47,10 @@ For testing, install the following modules:
 You might do so using pip:
 
 `pip install -U pytest mock`
+
+To run the tests
+
+`python -m pytest`
 
 to reset local
 
