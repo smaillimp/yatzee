@@ -15,12 +15,14 @@ python -m venv venv
 source venv/bin/activate
 ```
 
+
 For testing, install the following modules:
-`pytest`, `mock`
+
+`pytest`, `pytest-mock`
 
 You might do so using pip:
 ```
-pip install -U pytest mock
+pip install -U pytest pytest-mock
 ```
 
 To run the tests
